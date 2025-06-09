@@ -1,0 +1,11 @@
+# Ignorar carpetas y archivos generados por Qt y la compilación
+build*/
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.log
+*.user
+*.pro.user
+Makefile

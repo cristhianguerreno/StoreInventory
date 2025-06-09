@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AddItemDialogue</class>
+ <widget class="QDialog" name="AddItemDialogue">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>584</width>
+    <height>499</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Add Item</string>
+  </property>
+  <widget class="QLabel" name="lblName">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>70</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Product Name:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="txtProductName">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>70</y>
+     <width>261</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblQuantity">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>150</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Quantity</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="sbQuantity">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>145</y>
+     <width>81</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <number>999</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lbl">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>220</y>
+     <width>63</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Image:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblImage">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>200</y>
+     <width>250</width>
+     <height>250</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Shape::Panel</enum>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnConfirmAdd">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>310</y>
+     <width>93</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Confirm Add</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnLoadImage">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>250</y>
+     <width>141</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load Item Image</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
