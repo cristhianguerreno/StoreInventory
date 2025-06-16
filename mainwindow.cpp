@@ -9,6 +9,10 @@
 #include <QString>
 #include <QStringList>
 
+//#include "categorymanagerdialog.h"
+//#include "brandmanagerdialog.h"
+//#include "depositmanagerdialog.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -33,6 +37,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->menuLoadProducts, &QAction::triggered,
             this, &MainWindow::handleLoadItems);
+
+/*
+    connect(ui->menuBrand, &QAction::triggered,
+            this, &MainWindow::handleManageBrand);
+
+    connect(ui->menuCategory, &QAction::triggered,
+            this, &MainWindow::handleManageCategories);
+
+    connect(ui->menuDeposit, &QAction::triggered,
+            this, &MainWindow::handleManageDeposit);
+*/
 };
 
 MainWindow::~MainWindow()
@@ -83,6 +98,14 @@ void MainWindow::removeSelectedProduct()
     QPixmap pixmap("none.png");
     ui->lblImage->setPixmap(pixmap);
 
+    ui->lblProductName->setText("");
+    ui->lblQuantity->setNum(0);
+    ui->lblBrand->setText("");
+    ui->lblSize->setText("");
+    ui->lblCategory->setText("");
+    ui->lblDeposit->setText("");
+
+
 } //end of removeSelectedProduct
 
 void MainWindow::handleItemClick(QListWidgetItem* item){
@@ -95,6 +118,11 @@ void MainWindow::handleItemClick(QListWidgetItem* item){
         {
             ui-> lblProductName -> setText(currentItem -> getName());
             ui-> lblQuantity -> setText(QString::number(currentItem -> getQuantity()));
+            ui->lblBrand->setText(currentItem->getBrand());//cambiado
+            ui->lblSize->setText(QString::number(currentItem->getSize()));
+            ui->lblCategory->setText(currentItem->getCategory());
+            ui->lblDeposit->setText(currentItem->getDeposit());
+
 
             QPixmap pixmap(currentItem -> getImageFilePath());
             ui-> lblImage -> setPixmap(pixmap);
@@ -124,6 +152,10 @@ void MainWindow::handleMenuItemEdit()
             //make sure UI is updated
             ui->lblProductName -> setText(currentItem->getName());
             ui->lblQuantity -> setText(QString::number(currentItem->getQuantity()));
+            ui->lblBrand ->setText(currentItem->getBrand()); //cambiado
+            ui->lblSize ->setText(QString::number(currentItem->getSize()));
+            ui->lblCategory ->setText(currentItem->getCategory());
+            ui->lblDeposit ->setText(currentItem->getDeposit());
 
             QPixmap pixmap(currentItem -> getImageFilePath());
             ui->lblImage ->setPixmap(pixmap);
@@ -149,7 +181,11 @@ void MainWindow::handleSaveItems()
     {
         out<<product->getName()<<",";
         out<<product->getQuantity()<<",";
-        out<<product->getImageFilePath()<<Qt::endl;
+        out<<product->getImageFilePath()<<",";
+        out<<product->getBrand()<<",";
+        out<<product->getSize()<<",";
+        out<<product->getCategory()<<",";
+        out<<product->getDeposit()<<Qt::endl;
     } //end for
 
 
@@ -181,18 +217,45 @@ void MainWindow::handleLoadItems()
         QString line= in.readLine();
         QStringList info=line.split(","); //we telling to split every time , is present
 
-        //handle list of produt UI (viewer)
-        ui->lstProducts->addItem(info.at(0));
+        if (info.size() >= 7) {//cambiar si se quiero meter mas datos
+            // Agregar al list widget
+            ui->lstProducts->addItem(info.at(0));
 
-        //handle vector
-        Item* product = new Item (info.at(0),
-            info.at(1).toInt(), info.at(2)); //name, quantity, image path
+
+        //handle vector     ///cambiado para meter mas cosas
+            Item* product = new Item (info.at(0),
+                                 info.at(1).toInt(), info.at(2), info.at(3),
+                                     info.at(4).toInt(), info.at(5),info.at(6)); //name, quantity, image path
 
         productList.push_back(product);
 
-    } //end while
+    }
+    }
+        //end while
 
     in.flush();
     inputFile.close();
 
 } //endhandloadItems
+
+void MainWindow::handleManageBrand()
+{
+    BrandManagerDialog brandDialog(this);
+    brandDialog.setModal(true);
+    brandDialog.exec();
+}//end handlemanagebrand
+
+void MainWindow::handleManageCategories()
+{
+    // Crear y mostrar el diálogo de gestión de categorías
+    CategoryManagerDialog categoryDialog(this);
+    categoryDialog.setModal(true);
+    categoryDialog.exec();
+}//endhandlemanagecategories
+
+void MainWindow::handleManageDeposit()
+{
+    DepositManagerDialog depositDialog(this);
+    depositDialog.setModal(true);
+    depositDialog.exec();
+}//end handlemanagedeposit

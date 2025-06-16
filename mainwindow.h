@@ -25,7 +25,9 @@ public:
     void handleMenuItemEdit();//no se de donde salio
     void handleSaveItems();
     void handleLoadItems();
-
+    void handleManageCategories();
+    void handleManageBrand();
+    void handleManageDeposit();
 private:
     Ui::MainWindow *ui;
     QVector<Item*> productList;

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>584</width>
-    <height>499</height>
+    <width>1005</width>
+    <height>629</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QLabel" name="lblName">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>70</y>
+     <x>50</x>
+     <y>50</y>
      <width>121</width>
      <height>21</height>
     </rect>
@@ -29,8 +29,8 @@
   <widget class="QLineEdit" name="txtProductName">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>70</y>
+     <x>170</x>
+     <y>50</y>
      <width>261</width>
      <height>26</height>
     </rect>
@@ -39,8 +39,8 @@
   <widget class="QLabel" name="lblQuantity">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>150</y>
+     <x>50</x>
+     <y>90</y>
      <width>121</width>
      <height>21</height>
     </rect>
@@ -52,8 +52,8 @@
   <widget class="QSpinBox" name="sbQuantity">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>145</y>
+     <x>170</x>
+     <y>90</y>
      <width>81</width>
      <height>31</height>
     </rect>
@@ -68,8 +68,8 @@
   <widget class="QLabel" name="lbl">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>220</y>
+     <x>780</x>
+     <y>180</y>
      <width>63</width>
      <height>20</height>
     </rect>
@@ -81,8 +81,8 @@
   <widget class="QLabel" name="lblImage">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>200</y>
+     <x>690</x>
+     <y>260</y>
      <width>250</width>
      <height>250</height>
     </rect>
@@ -97,8 +97,8 @@
   <widget class="QPushButton" name="btnConfirmAdd">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>310</y>
+     <x>770</x>
+     <y>560</y>
      <width>93</width>
      <height>29</height>
     </rect>
@@ -110,14 +110,106 @@
   <widget class="QPushButton" name="btnLoadImage">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>250</y>
+     <x>740</x>
+     <y>220</y>
      <width>141</width>
      <height>29</height>
     </rect>
    </property>
    <property name="text">
     <string>Load Item Image</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblBrand">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>140</y>
+     <width>63</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Brand:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="txtBrand">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>130</y>
+     <width>171</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblBrand_2">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>190</y>
+     <width>63</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Size:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblBrand_3">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>230</y>
+     <width>63</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Category:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblBrand_4">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>280</y>
+     <width>63</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Deposit:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="txtSize">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>180</y>
+     <width>171</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="txtCategory">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>220</y>
+     <width>171</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="txtDeposit">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>270</y>
+     <width>171</width>
+     <height>26</height>
+    </rect>
    </property>
   </widget>
  </widget>

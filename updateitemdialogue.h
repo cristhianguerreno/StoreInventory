@@ -19,12 +19,17 @@ public:
 
     void confirmUpdate();
     void loadItemImage();
-
+    QString getBrand();//agregaedo
+    QString getSize();
+    QString getCategory();
+    QString getDeposit();
 
 private:
     Ui::UpdateItemDIalogue *ui;
     Item* currentItem; //to keep track wich is modified
     QString imageFilePath; //
+
+
 };
 
 #endif // UPDATEITEMDIALOGUE_H

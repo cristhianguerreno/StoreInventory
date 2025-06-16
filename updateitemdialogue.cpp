@@ -1,8 +1,8 @@
 #include "updateitemdialogue.h"
 #include "ui_updateitemdialogue.h"
-
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QDir> //incluido clau
 
 UpdateItemDIalogue::UpdateItemDIalogue(Item* currentItem, QWidget *parent)
     : QDialog(parent)
@@ -15,6 +15,11 @@ UpdateItemDIalogue::UpdateItemDIalogue(Item* currentItem, QWidget *parent)
     if (currentItem != nullptr)
     {
         ui-> lblItemName -> setText(currentItem -> getName());
+        ui->sbQuantity->setValue(currentItem->getQuantity());//agrego clau no se pq
+        ui->txtBrand->setText(currentItem->getBrand());//agregado
+        ui->txtSize->setText(QString::number(currentItem -> getSize()));
+        ui->txtCategory->setText(currentItem ->getCategory());
+        ui->txtDeposit->setText(currentItem ->getDeposit());
 
         QPixmap pixmap(currentItem-> getImageFilePath());
         ui-> lblImage -> setPixmap(pixmap);
@@ -41,11 +46,22 @@ UpdateItemDIalogue::~UpdateItemDIalogue()
 
 void UpdateItemDIalogue::confirmUpdate()
 {
+    QString name= ui->txtName->text();
     int quantity= ui-> sbQuantity -> value();
-    if (quantity >=1)
-    {
+    QString brand = getBrand(); //agregado
+    int size = getSize().toInt();//poner algo que no deje meter negativo
+    QString category = getCategory();
+    QString deposit = getDeposit();
+
+    if (quantity >=0)
+    {//call setters
+        currentItem-> setName(name);
         currentItem-> setQuantity(quantity);
         currentItem-> setImageFilePath(imageFilePath);
+        currentItem-> setBrand(brand);
+        currentItem-> setSize(size);
+        currentItem-> setCategory(category);
+        currentItem-> setDeposit(deposit);
         this->close();
     } //end if
     else
@@ -80,4 +96,22 @@ void UpdateItemDIalogue::loadItemImage()
 
 
 
+//aca cambio las coassas claude no cambie pq funciona este y ademas no tiene que ver con brand
+
 } //end UpDtaeItemDIologue
+
+QString UpdateItemDIalogue::getBrand() {
+    return ui->txtBrand->text();//metio claude
+}
+
+QString UpdateItemDIalogue::getSize() {
+    return ui->txtSize->text();//metio claude
+}
+
+QString UpdateItemDIalogue::getCategory() {
+    return ui->txtCategory->text();//metio claude
+}
+
+QString UpdateItemDIalogue::getDeposit() {
+    return ui->txtDeposit->text();//metio claude
+}

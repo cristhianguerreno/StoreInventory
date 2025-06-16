@@ -22,6 +22,11 @@ private:
     Ui::AddItemDialogue *ui;
     Item**newItem;//points to the pointer to modify the actual pointer
     QString imageFilePath;
+    QString getBrand();//agregado
+    int getSize();
+    QString getCategory();
+    QString getDeposit();
+
 };
 
 #endif // ADDITEMDIALOGUE_H
