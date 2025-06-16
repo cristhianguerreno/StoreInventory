@@ -1,6 +1,7 @@
 QT += core gui
 #This tells Qt to use the core library (basic functions) and
 #the GUI library (for windows, buttons, etc.)
+#HOLAAAAAAAAAAAAAAA
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
