@@ -9,10 +9,6 @@
 #include <QString>
 #include <QStringList>
 
-//#include "categorymanagerdialog.h"
-//#include "brandmanagerdialog.h"
-//#include "depositmanagerdialog.h"
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -48,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->menuDeposit, &QAction::triggered,
             this, &MainWindow::handleManageDeposit);
 */
+
 };
 
 MainWindow::~MainWindow()
@@ -238,6 +235,7 @@ void MainWindow::handleLoadItems()
 
 } //endhandloadItems
 
+/*
 void MainWindow::handleManageBrand()
 {
     BrandManagerDialog brandDialog(this);
@@ -259,3 +257,4 @@ void MainWindow::handleManageDeposit()
     depositDialog.setModal(true);
     depositDialog.exec();
 }//end handlemanagedeposit
+*/

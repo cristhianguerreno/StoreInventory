@@ -16,7 +16,6 @@ CONFIG += c++17
 SOURCES += \
     Item.cpp \
     additemdialogue.cpp \
-    categorymanagerdialog.cpp \
     main.cpp \
     mainwindow.cpp \
     startdialog.cpp \
@@ -26,7 +25,6 @@ SOURCES += \
 HEADERS += \
     Item.h \
     additemdialogue.h \
-    categorymanagerdialog.h \
     mainwindow.h \
     startdialog.h \
     updateitemdialogue.h
@@ -35,7 +33,6 @@ HEADERS += \
 #They describe how the windows and dialogs look.
 FORMS += \
     additemdialogue.ui \
-    categorymanagerdialog.ui \
     mainwindow.ui \
     startdialog.ui \
     updateitemdialogue.ui

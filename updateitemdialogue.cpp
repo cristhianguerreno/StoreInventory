@@ -71,34 +71,34 @@ void UpdateItemDIalogue::confirmUpdate()
         mb.exec();
     }// end else
 } //end update
-
 void UpdateItemDIalogue::loadItemImage()
 {
-    QString filename;
+    QString filename = QFileDialog::getOpenFileName(this, "Open Image", "./", "Image Files (*.png *.jpg)");
 
-    filename= QFileDialog::getOpenFileName(this,"Open Image Files",
-                                            "./","Image FIles (*png *jpg)");
+    if (!filename.isEmpty()) {
+        int lastSlash = filename.lastIndexOf("/");
+        QString shortName = filename.mid(lastSlash + 1);
+        QString localPath = "./images/" + shortName;
 
-    if (filename != " ") //if has some value //if not they click cancel
-    {
-        int lastSlash= filename.lastIndexOf("/");
-        QString shortName= filename.right(filename.size() - lastSlash - 1); //because starts from 0
+        if (!QFile::exists(localPath)) {
+            if (!QFile::copy(filename, localPath)) {
+                QMessageBox::warning(this, "Error", "No se pudo copiar la imagen.");
+                return;
+            }
+        }
 
-        QFile::copy(filename, "./images/" + shortName);//copy from original location to images
-        QPixmap pixmap("./images/"+shortName); //load ir on our memoery
+        QPixmap pixmap(localPath);
+        if (pixmap.isNull()) {
+            QMessageBox::warning(this, "Error", "No se pudo cargar la imagen seleccionada.");
+            return;
+        }
 
-        ui ->lblImage -> setPixmap(pixmap);
-        ui->lblImage ->setScaledContents(true);
-
-         imageFilePath = "./images/" + shortName; //cht actualiza el path
-
-    }    //end if
-
-
-
-//aca cambio las coassas claude no cambie pq funciona este y ademas no tiene que ver con brand
-
-} //end UpDtaeItemDIologue
+        ui->lblImage->setPixmap(pixmap);
+        ui->lblImage->setScaledContents(true);
+        imageFilePath = localPath;
+    }
+}
+//end UpDtaeItemDIologue
 
 QString UpdateItemDIalogue::getBrand() {
     return ui->txtBrand->text();//metio claude

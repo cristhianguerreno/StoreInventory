@@ -65,10 +65,11 @@ void AddItemDialogue::confirmAdd()
     }
 } //end confirmAdd
 
+/*
 void AddItemDialogue::loadItemImage()
 {
 
-    /*
+
 
     QString filename;
 
@@ -103,7 +104,7 @@ void AddItemDialogue::loadItemImage()
 
         imageFilePath="./images/" + shortName;
         //update the internal data
-        */
+
 
 
     QString filename = QFileDialog::getOpenFileName(this, "Open Image", "./", "Image Files (*.png *.jpg)");
@@ -143,11 +144,49 @@ void AddItemDialogue::loadItemImage()
     ui->lblImage->setScaledContents(true);
     imageFilePath = localPath;
 
-    } //end loadImage
+    }} //end loadImage */
+void AddItemDialogue::loadItemImage()
+{
+    QString filename = QFileDialog::getOpenFileName(this, "Open Image", "./", "Image Files (*.png *.jpg)");
+    if (filename.isEmpty()) return;
+
+    // Extraer nombre corto
+    int lastSlash = filename.lastIndexOf("/");
+    QString shortName = filename.mid(lastSlash + 1);
+
+    // Asegurar carpeta ./images/
+    QDir dir;
+    if (!dir.exists("images")) {
+        dir.mkdir("images");
+    }
+
+    // Crear ruta destino
+    QString localPath = "./images/" + shortName;
+
+    // Copiar si no existe
+    if (!QFile::exists(localPath)) {
+        if (!QFile::copy(filename, localPath)) {
+            QMessageBox::warning(this, "Error", "No se pudo copiar la imagen.");
+            return;
+        }
+    }
+
+    // Cargar imagen
+    QPixmap pixmap(localPath);
+    if (pixmap.isNull()) {
+        QMessageBox::warning(this, "Error", "No se pudo cargar la imagen seleccionada.");
+        return;
+    }
+
+    ui->lblImage->setPixmap(pixmap);
+    ui->lblImage->setScaledContents(true);
+    imageFilePath = localPath;
+}
+
 
     QString AddItemDialogue::getBrand() {//agregado
         return ui ->txtBrand -> text();
-}
+    }
     int AddItemDialogue::getSize() {
         return ui -> txtSize ->text().toInt();//convierte qlineedit a int
     }
@@ -157,3 +196,5 @@ void AddItemDialogue::loadItemImage()
     QString AddItemDialogue::getDeposit() {
         return ui -> txtDeposit -> text();
     }
+
+
