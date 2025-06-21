@@ -7,16 +7,22 @@ namespace Ui {
 class StartDialog;
 }
 
-class StartDialog : public QDialog
+ class StartDialog : public QDialog
 {
     Q_OBJECT
 
 public:
     explicit StartDialog(QWidget *parent = nullptr);
     ~StartDialog();
+    QString getCurrentRole() const;
 
 private:
     Ui::StartDialog *ui;
+    QString currentRole;  // ✅ AGREGA ESTO
+private slots:
+    void handleLogin();  // ✅ Agregá esta línea
+
 };
+
 
 #endif // STARTDIALOG_H

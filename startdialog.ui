@@ -26,33 +26,7 @@
     <string>WELCOME</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_Admin">
-   <property name="geometry">
-    <rect>
-     <x>190</x>
-     <y>60</y>
-     <width>93</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Admin</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushBottom_User">
-   <property name="geometry">
-    <rect>
-     <x>460</x>
-     <y>40</y>
-     <width>93</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>User</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEditUser">
+  <widget class="QLineEdit" name="txtUsername">
    <property name="geometry">
     <rect>
      <x>230</x>
@@ -62,7 +36,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEditPassword">
+  <widget class="QLineEdit" name="txtPassword">
    <property name="geometry">
     <rect>
      <x>410</x>
@@ -96,6 +70,19 @@
    </property>
    <property name="text">
     <string>Password</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnLogin">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>260</y>
+     <width>93</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>btnLogin</string>
    </property>
   </widget>
  </widget>

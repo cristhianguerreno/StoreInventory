@@ -4,6 +4,7 @@ QT += core gui
 #HOLAAAAAAAAAAAAAAA
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += sql
 
 CONFIG += c++17
 #This sets the C++ version to C++17
@@ -16,18 +17,22 @@ CONFIG += c++17
 SOURCES += \
     Item.cpp \
     additemdialogue.cpp \
+    databasemanager.cpp \
     main.cpp \
     mainwindow.cpp \
     startdialog.cpp \
-    updateitemdialogue.cpp
+    updateitemdialogue.cpp \
+    usermanagerdialog.cpp
 
 #Files that define the structure of the classes (what functions and variables they have)
 HEADERS += \
     Item.h \
     additemdialogue.h \
+    databasemanager.h \
     mainwindow.h \
     startdialog.h \
-    updateitemdialogue.h
+    updateitemdialogue.h \
+    usermanagerdialog.h
 
 #These are files created using Qt Designer (visual editor)
 #They describe how the windows and dialogs look.
@@ -35,7 +40,8 @@ FORMS += \
     additemdialogue.ui \
     mainwindow.ui \
     startdialog.ui \
-    updateitemdialogue.ui
+    updateitemdialogue.ui \
+    usermanagerdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
