@@ -10,6 +10,12 @@
     <height>612</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>500</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Store Inventory Aplication</string>
   </property>
@@ -260,7 +266,7 @@
      <x>0</x>
      <y>0</y>
      <width>1053</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -269,13 +275,7 @@
     </property>
     <addaction name="menuNewProduct"/>
     <addaction name="menuEditSelectedProduct"/>
-    <addaction name="menuSaveProducts"/>
-    <addaction name="menuLoadProducts"/>
-    <addaction name="menuExit"/>
     <addaction name="separator"/>
-    <addaction name="menuCategory"/>
-    <addaction name="menuBrand"/>
-    <addaction name="menuDeposit"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -293,36 +293,6 @@
   <action name="menuEditSelectedProduct">
    <property name="text">
     <string>Edit Selected Product</string>
-   </property>
-  </action>
-  <action name="menuSaveProducts">
-   <property name="text">
-    <string>Save Products</string>
-   </property>
-  </action>
-  <action name="menuLoadProducts">
-   <property name="text">
-    <string>Load Products</string>
-   </property>
-  </action>
-  <action name="menuExit">
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </action>
-  <action name="menuCategory">
-   <property name="text">
-    <string>Category</string>
-   </property>
-  </action>
-  <action name="menuBrand">
-   <property name="text">
-    <string>Brands</string>
-   </property>
-  </action>
-  <action name="menuDeposit">
-   <property name="text">
-    <string>Deposit</string>
    </property>
   </action>
  </widget>

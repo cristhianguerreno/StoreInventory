@@ -318,11 +318,11 @@ MainWindow::MainWindow(QString r, DatabaseManager* db, QWidget *parent)
     connect(ui->menuEditSelectedProduct, &QAction::triggered,
             this, &MainWindow::handleMenuItemEdit);
 
-    connect(ui->menuSaveProducts, &QAction::triggered,
+   /* connect(ui->menuSaveProducts, &QAction::triggered,
             this, &MainWindow::handleSaveItems);
 
     connect(ui->menuLoadProducts, &QAction::triggered,
-            this, &MainWindow::handleLoadItems);
+            this, &MainWindow::handleLoadItems);*/
 
     // Timer para verificar stock bajo periódicamente
     QTimer* stockCheckTimer = new QTimer(this);
