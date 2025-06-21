@@ -25,6 +25,7 @@ public:
 
     bool initializeDatabase();
     bool createTables();
+    void createDefaultUsers();
 
     // CRUD operations
     bool insertItem(Item* item);

@@ -461,7 +461,7 @@ void MainWindow::addItemToList(Item* item)
 
     // Agregar indicador visual si está en stock bajo
     if (item->isLowStock()) {
-        displayText += " ⚠️ STOCK BAJO";
+        displayText += " ⚠️ LOW STOCK";
     }
 
     QListWidgetItem* listItem = new QListWidgetItem(displayText);
@@ -485,7 +485,7 @@ void MainWindow::updateItemInList(int index, Item* item)
         QString displayText = item->getName();
 
         if (item->isLowStock()) {
-            displayText += " ⚠️ STOCK BAJO";
+            displayText += " ⚠️ LOW STOCK";
             listItem->setBackground(QBrush(QColor(255, 200, 200)));
             listItem->setForeground(QBrush(QColor(139, 0, 0)));
         } else if (item->getQuantity() <= item->getMinimumStock() + 5) {
@@ -512,10 +512,10 @@ void MainWindow::updateProductDisplay(Item* item)
 
     // Mostrar estado del stock
     if (item->isLowStock()) {
-        ui->lblStockStatus->setText("⚠️ STOCK BAJO");
+        ui->lblStockStatus->setText("⚠️ LOW STOCK");
         ui->lblStockStatus->setStyleSheet("color: red; font-weight: bold;");
     } else if (item->getQuantity() <= item->getMinimumStock() + 5) {
-        ui->lblStockStatus->setText("⚠️ STOCK MEDIO");
+        ui->lblStockStatus->setText("⚠️ AVERAGE STOCK");
         ui->lblStockStatus->setStyleSheet("color: orange; font-weight: bold;");
     } else {
         ui->lblStockStatus->setText("✅ STOCK OK");
@@ -557,7 +557,7 @@ void MainWindow::checkLowStock()
 
     if (!lowStockItems.isEmpty()) {
         // Actualizar título de ventana con alerta
-        setWindowTitle("Sistema de Inventario - ⚠️ STOCK BAJO (" +
+        setWindowTitle("Sistema de Inventario - ⚠️ LOW STOCK (" +
                        QString::number(lowStockItems.size()) + " productos)");
 
         // Opcional: mostrar notificación cada cierto tiempo

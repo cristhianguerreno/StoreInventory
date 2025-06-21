@@ -56,7 +56,7 @@ void UpdateItemDIalogue::confirmUpdate()
     QString brand = getBrand(); //agregado
     int size = getSize().toInt();//poner algo que no deje meter negativo
     if (size < 0) {
-        QMessageBox::warning(this, "Error", "El tamaño no puede ser negativo.");
+        QMessageBox::warning(this, "Error", "Size cannot be negative.");
         return;
     }
     QString category = getCategory();
@@ -105,14 +105,14 @@ void UpdateItemDIalogue::loadItemImage()
 
         if (!QFile::exists(localPath)) {
             if (!QFile::copy(filename, localPath)) {
-                QMessageBox::warning(this, "Error", "No se pudo copiar la imagen.");
+                QMessageBox::warning(this, "Error", "The image could not be copied..");
                 return;
             }
         }
 
         QPixmap pixmap(localPath);
         if (pixmap.isNull()) {
-            QMessageBox::warning(this, "Error", "No se pudo cargar la imagen seleccionada.");
+            QMessageBox::warning(this, "Error", "The selected image could not be loaded.");
             return;
         }
 

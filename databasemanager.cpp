@@ -64,8 +64,16 @@ bool DatabaseManager::initializeDatabase() {
     }
 
     qDebug() << "Conexión exitosa con SQLite";
-    return createTables();
+
+    if (!createTables()) {
+        return false;
+    }
+
+    createDefaultUsers(); // ← AGREGA ESTA LÍNEA
+
+    return true;
 }
+
 
 
 bool DatabaseManager::createTables() {
@@ -265,3 +273,40 @@ QPixmap DatabaseManager::byteArrayToPixmap(const QByteArray& byteArray) {
     pixmap.loadFromData(byteArray);
     return pixmap;
 }
+
+void DatabaseManager::createDefaultUsers()
+{
+    QSqlQuery query;
+
+    // Crear tabla users si no existe
+    QString createUserTableQuery = R"(
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            role TEXT NOT NULL
+        )
+    )";
+
+    if (!query.exec(createUserTableQuery)) {
+        qDebug() << "Error creando tabla users:" << query.lastError().text();
+        return;
+    }
+
+    // Insertar admin
+    query.prepare("INSERT OR IGNORE INTO users (username, password, role) "
+                  "VALUES ('admin', 'admin123', 'admin')");
+    if (!query.exec()) {
+        qDebug() << "Error insertando admin:" << query.lastError().text();
+    }
+
+    // Insertar user normal
+    query.prepare("INSERT OR IGNORE INTO users (username, password, role) "
+                  "VALUES ('user', 'user123', 'user')");
+    if (!query.exec()) {
+        qDebug() << "Error insertando user:" << query.lastError().text();
+    }
+
+    qDebug() << "Usuarios por defecto creados (si no existían)";
+}
+

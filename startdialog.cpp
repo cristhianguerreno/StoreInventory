@@ -33,7 +33,7 @@ void StartDialog::handleLogin()
         currentRole = query.value(0).toString();  // guarda el rol del usuario
         accept();  // ✅ CIERRA correctamente el diálogo e informa que fue exitoso
     } else {
-        QMessageBox::warning(this, "Login fallido", "Usuario o contraseña incorrectos");
+        QMessageBox::warning(this, "Login failed", "Incorrect username or password");
     }
 }
 
