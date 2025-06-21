@@ -18,9 +18,9 @@ public:
 
 private:
     Ui::StartDialog *ui;
-    QString currentRole;  // ✅ AGREGA ESTO
+    QString currentRole;  // ✅ ADD THIS
 private slots:
-    void handleLogin();  // ✅ Agregá esta línea
+    void handleLogin();  // ✅ add this line
 
 };
 

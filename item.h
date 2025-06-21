@@ -5,7 +5,7 @@
 
 class Item {
 private:
-    int id; // ID para la base de datos
+    int id; // ID for database
     QString name;
     int quantity;
     QString imageFilePath;
@@ -13,14 +13,14 @@ private:
     int size;
     QString category;
     QString deposit;
-    int minimumStock; // Nuevo campo para stock mínimo
+    int minimumStock; // New field for minimun stock
 
 public:
-    // Constructor actualizado
+    // Updated Constructor
     Item(QString name, int quantity, QString imageFilePath, QString brand,
          int size, QString category, QString deposit, int minimumStock = 5, int id = -1);
 
-    // Getters y setters existentes
+    // Existing Getters and setters
     void setName(QString name);
     QString getName() const;
     void setQuantity(int quantity);
@@ -36,13 +36,13 @@ public:
     void setDeposit(QString deposit);
     QString getDeposit() const;
 
-    // Nuevos getters y setters
+    // New getters and setters
     void setId(int id);
     int getId() const;
     void setMinimumStock(int minimumStock);
     int getMinimumStock() const;
 
-    // Método para verificar si está en stock bajo
+    // Method to verify if there is low stock
     bool isLowStock() const;
 };
 

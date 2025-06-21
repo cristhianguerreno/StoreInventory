@@ -2,13 +2,10 @@
 #include "ui_updateitemdialogue.h"
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QDir> //incluido clau
+#include <QDir> //Include clau
 #include "databasemanager.h"
 
 
-/*UpdateItemDIalogue::UpdateItemDIalogue(Item* currentItem, QWidget *parent)
-    : QDialog(parent)
-    , ui(new Ui::UpdateItemDIalogue) */
 UpdateItemDIalogue::UpdateItemDIalogue(Item* currentItem, DatabaseManager* dbManager, QWidget *parent)
     : QDialog(parent), ui(new Ui::UpdateItemDIalogue), dbManager(dbManager)
 
@@ -20,8 +17,8 @@ UpdateItemDIalogue::UpdateItemDIalogue(Item* currentItem, DatabaseManager* dbMan
     if (currentItem != nullptr)
     {
         ui-> lblItemName -> setText(currentItem -> getName());
-        ui->sbQuantity->setValue(currentItem->getQuantity());//agrego clau no se pq
-        ui->txtBrand->setText(currentItem->getBrand());//agregado
+        ui->sbQuantity->setValue(currentItem->getQuantity());//add clau
+        ui->txtBrand->setText(currentItem->getBrand());//added
         ui->txtSize->setText(QString::number(currentItem -> getSize()));
         ui->txtCategory->setText(currentItem ->getCategory());
         ui->txtDeposit->setText(currentItem ->getDeposit());
@@ -53,18 +50,15 @@ void UpdateItemDIalogue::confirmUpdate()
 {
     QString name= ui->txtName->text();
     int quantity= ui-> sbQuantity -> value();
-    QString brand = getBrand(); //agregado
-    int size = getSize().toInt();//poner algo que no deje meter negativo
+    QString brand = getBrand(); //added
+    int size = getSize().toInt();//put something that doesn't let you enter negative
     if (size < 0) {
         QMessageBox::warning(this, "Error", "Size cannot be negative.");
         return;
     }
     QString category = getCategory();
     QString deposit = getDeposit();
-    /*
-    int minimumStock = getMinimumStock(); con sql
-    currentItem->setMinimumStock(minimumStock);
-    */
+
 
     if (quantity >=0)
     {//call setters
@@ -83,15 +77,15 @@ void UpdateItemDIalogue::confirmUpdate()
         mb.setText("Quantity must be atleast 1");
         mb.exec();
     }// end else
-    //agregado sql
-    currentItem->setMinimumStock(getMinimumStock()); // ¡Ahora sí se usa el campo!
-   // DatabaseManager* dbManager;
+    //added Sql
+    currentItem->setMinimumStock(getMinimumStock()); // Now the field is used!
+
 
     if (!dbManager->updateItem(currentItem)) {
         QMessageBox::warning(this, "Error", "No se pudo guardar los cambios en la base de datos.");
         return;
     }
-    accept(); // Cierra el diálogo con resultado "aceptado"
+    accept(); // Close the dialog with the result "accepted"
 
 } //end update
 void UpdateItemDIalogue::loadItemImage()
@@ -124,22 +118,22 @@ void UpdateItemDIalogue::loadItemImage()
 //end UpDtaeItemDIologue
 
 QString UpdateItemDIalogue::getBrand() {
-    return ui->txtBrand->text();//metio claude
+    return ui->txtBrand->text();//insert claude
 }
 
 QString UpdateItemDIalogue::getSize() {
-    return ui->txtSize->text();//metio claude
+    return ui->txtSize->text();//insert claude
 }
 
 QString UpdateItemDIalogue::getCategory() {
-    return ui->txtCategory->text();//metio claude
+    return ui->txtCategory->text();//insert claude
 }
 
 QString UpdateItemDIalogue::getDeposit() {
-    return ui->txtDeposit->text();//metio claude
+    return ui->txtDeposit->text();//insert claude
 }
 
 int UpdateItemDIalogue::getMinimumStock() {
     return ui->sbMinimumStock->value();
-} //con sql
+} //with sql
 

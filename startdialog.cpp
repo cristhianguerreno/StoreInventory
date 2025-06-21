@@ -17,7 +17,7 @@ StartDialog::~StartDialog()
     delete ui;
 }
 QString StartDialog::getCurrentRole() const {
-    return currentRole;  // donde currentRole es una variable que almacenas después del login
+    return currentRole;  // where currentRole is a variable that you store after login
 }
 void StartDialog::handleLogin()
 {
@@ -30,8 +30,8 @@ void StartDialog::handleLogin()
     query.bindValue(":password", password);
 
     if (query.exec() && query.next()) {
-        currentRole = query.value(0).toString();  // guarda el rol del usuario
-        accept();  // ✅ CIERRA correctamente el diálogo e informa que fue exitoso
+        currentRole = query.value(0).toString();  // saves the user's role
+        accept();  // ✅ Correctly CLOSE the dialog and report that it was successful
     } else {
         QMessageBox::warning(this, "Login failed", "Incorrect username or password");
     }

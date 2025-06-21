@@ -15,7 +15,7 @@
 
 class DatabaseManager {
 private:
-    QSqlDatabase db; // ← ESTA LÍNEA ES CRUCIAL
+    QSqlDatabase db; // ← THIS LINE IS CRUCIAL
     QByteArray pixmapToByteArray(const QPixmap& pixmap);
     QPixmap byteArrayToPixmap(const QByteArray& byteArray);
 

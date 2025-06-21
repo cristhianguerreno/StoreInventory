@@ -26,11 +26,11 @@ private:
     Ui::AddItemDialogue *ui;
     Item**newItem;//points to the pointer to modify the actual pointer
     QString imageFilePath;
-    QString getBrand();//agregado
+    QString getBrand();//added
     int getSize();
     QString getCategory();
     QString getDeposit();
-    int getMinimumStock(); //meter con sql
+    int getMinimumStock(); //insert with Sql
 
 };
 

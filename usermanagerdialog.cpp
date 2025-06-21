@@ -7,7 +7,7 @@ UserManagerDialog::UserManagerDialog(DatabaseManager* dbManager, QWidget *parent
 {
     ui->setupUi(this);
 
-    // Opciones de rol
+    // Options with role
     ui->cbRole->addItem("user");
     ui->cbRole->addItem("admin");
 
@@ -26,7 +26,7 @@ void UserManagerDialog::handleCreateUser()
     QString role = ui->cbRole->currentText();
 
     if (username.isEmpty() || password.isEmpty()) {
-        QMessageBox::warning(this, "Error", "Por favor completa todos los campos.");
+        QMessageBox::warning(this, "Error", "Please complete all fields.");
         return;
     }
 
@@ -37,10 +37,10 @@ void UserManagerDialog::handleCreateUser()
     query.bindValue(":role", role);
 
     if (query.exec()) {
-        QMessageBox::information(this, "Éxito", "Usuario creado exitosamente.");
+        QMessageBox::information(this,"Success", "User created successfully.");
         ui->txtUsername->clear();
         ui->txtPassword->clear();
     } else {
-        QMessageBox::warning(this, "Error", "No se pudo crear el usuario.\n" + query.lastError().text());
+        QMessageBox::warning(this, "Error", "The user could not be created.\n" + query.lastError().text());
     }
 }

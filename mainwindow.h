@@ -33,7 +33,7 @@ public:
     void hanldeMenuItemNew(); //creates slot for a clicking of new ite,
     void removeSelectedProduct();
     void handleItemClick(QListWidgetItem* item);//pass pointer
-    void handleMenuItemEdit();//no se de donde salio
+    void handleMenuItemEdit();//nobody knows where this come from, but if you delete it the code just stop working, so... don't touch this
     void handleSaveItems();
     void handleLoadItems();
 
@@ -50,10 +50,10 @@ private:
     void updateProductDisplay(Item* item);
     void clearProductDisplay();
 
-    //meter con sql
+    //insert with Sql
 private slots:
     void checkLowStock();
-   // void openUserManager();  // ✅ dentro de slots
+   // void openUserManager();  // ✅ inside of slots
 
 
 };

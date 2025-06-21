@@ -14,7 +14,7 @@
 
 DatabaseManager::DatabaseManager() {
     // db = QSqlDatabase::addDatabase("QMYSQL");
-    //boorro claude
+    //de claude
 }
 
 DatabaseManager::~DatabaseManager() {
@@ -22,54 +22,22 @@ DatabaseManager::~DatabaseManager() {
         db.close();
     }
 }
-/*
-bool DatabaseManager::initializeDatabase() {
-    // Configurar conexión a MySQL
-    db = QSqlDatabase::addDatabase("QMYSQL");//agg claude
-    db.setHostName("localhost");      // Cambiar por tu host
-    db.setDatabaseName("inventario"); // Nombre de tu base de datos
-    db.setUserName("userproyecto");           // Tu usuario MySQL
-    db.setPassword("proyectooop");               // Tu contraseña MySQL
-    db.setPort(3306);                // Puerto MySQL
 
-    if (!db.open()) {
-        qDebug() << "Error al conectar con MySQL:" << db.lastError().text();
-        return false;
-    }
-*/
-/*
 bool DatabaseManager::initializeDatabase() {
-    db = QSqlDatabase::addDatabase("QSQLITE"); // ← CORRECTO
-    db.setHostName("localhost");
-    db.setDatabaseName("inventario");
-    db.setUserName("userproyecto");
-    db.setPassword("proyectooop");
-    db.setPort(3306);
-
+    db = QSqlDatabase::addDatabase("QSQLITE"); // Before: MySql
+    db.setDatabaseName("inventario.db");       // This would be the local file
     if (!db.open()) {
-        qDebug() << "Error al conectar con MySQL:" << db.lastError().text();
+        qDebug() << "Error connecting to SQLite:" << db.lastError().text();
         return false;
     }
 
-    qDebug() << "Conexión exitosa a MySQL";
-    return createTables();
-}
-*/
-bool DatabaseManager::initializeDatabase() {
-    db = QSqlDatabase::addDatabase("QSQLITE"); // CAMBIO: antes era QMYSQL
-    db.setDatabaseName("inventario.db");       // Este será el archivo local
-    if (!db.open()) {
-        qDebug() << "Error al conectar con SQLite:" << db.lastError().text();
-        return false;
-    }
-
-    qDebug() << "Conexión exitosa con SQLite";
+    qDebug() << "Successful connection to SQLite";
 
     if (!createTables()) {
         return false;
     }
 
-    createDefaultUsers(); // ← AGREGA ESTA LÍNEA
+    createDefaultUsers(); // ← ADD THIS LINE
 
     return true;
 }
@@ -79,24 +47,7 @@ bool DatabaseManager::initializeDatabase() {
 bool DatabaseManager::createTables() {
     QSqlQuery query;
 
-    // Crear tabla de productos
-    /*
-    QString createTableQuery = R"(
-        CREATE TABLE IF NOT EXISTS products (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            quantity INT NOT NULL,
-            image_path VARCHAR(500),
-            image_data LONGBLOB,
-            brand VARCHAR(255),
-            size INT,
-            category VARCHAR(255),
-            deposit VARCHAR(255),
-            minimum_stock INT DEFAULT 5,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        )
-*/
+//Create table
     QString createTableQuery = R"(
     CREATE TABLE IF NOT EXISTS products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -133,7 +84,7 @@ bool DatabaseManager::insertItem(Item* item) {
     query.bindValue(":quantity", item->getQuantity());
     query.bindValue(":image_path", item->getImageFilePath());
 
-    // Convertir imagen a datos binarios
+    //Convert image to binary data
     QPixmap pixmap(item->getImageFilePath());
     if (!pixmap.isNull()) {
         QByteArray imageData = pixmapToByteArray(pixmap);
@@ -149,11 +100,11 @@ bool DatabaseManager::insertItem(Item* item) {
     query.bindValue(":minimum_stock", item->getMinimumStock());
 
     if (!query.exec()) {
-        qDebug() << "Error insertando item:" << query.lastError().text();
+        qDebug() << "Error inserting item:" << query.lastError().text();
         return false;
     }
 
-    // Obtener el ID generado
+    // Obtain generated ID
     item->setId(query.lastInsertId().toInt());
     return true;
 }
@@ -179,7 +130,7 @@ bool DatabaseManager::updateItem(Item* item) {
     query.bindValue(":quantity", item->getQuantity());
     query.bindValue(":image_path", item->getImageFilePath());
 
-    // Actualizar imagen si cambió
+    // Update image if it changed
     QPixmap pixmap(item->getImageFilePath());
     if (!pixmap.isNull()) {
         QByteArray imageData = pixmapToByteArray(pixmap);
@@ -195,7 +146,7 @@ bool DatabaseManager::updateItem(Item* item) {
     query.bindValue(":minimum_stock", item->getMinimumStock());
 
     if (!query.exec()) {
-        qDebug() << "Error actualizando item:" << query.lastError().text();
+        qDebug() << "Error updating item:" << query.lastError().text();
         return false;
     }
 
@@ -208,7 +159,7 @@ bool DatabaseManager::deleteItem(int id) {
     query.bindValue(":id", id);
 
     if (!query.exec()) {
-        qDebug() << "Error eliminando item:" << query.lastError().text();
+        qDebug() << "Error deleting item:" << query.lastError().text();
         return false;
     }
 
@@ -278,7 +229,7 @@ void DatabaseManager::createDefaultUsers()
 {
     QSqlQuery query;
 
-    // Crear tabla users si no existe
+    // Create users table if it does not exist
     QString createUserTableQuery = R"(
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -289,7 +240,7 @@ void DatabaseManager::createDefaultUsers()
     )";
 
     if (!query.exec(createUserTableQuery)) {
-        qDebug() << "Error creando tabla users:" << query.lastError().text();
+        qDebug() << "Error creating users table:" << query.lastError().text();
         return;
     }
 
@@ -297,16 +248,16 @@ void DatabaseManager::createDefaultUsers()
     query.prepare("INSERT OR IGNORE INTO users (username, password, role) "
                   "VALUES ('admin', 'admin123', 'admin')");
     if (!query.exec()) {
-        qDebug() << "Error insertando admin:" << query.lastError().text();
+        qDebug() << "Error inserting admin:" << query.lastError().text();
     }
 
     // Insertar user normal
     query.prepare("INSERT OR IGNORE INTO users (username, password, role) "
                   "VALUES ('user', 'user123', 'user')");
     if (!query.exec()) {
-        qDebug() << "Error insertando user:" << query.lastError().text();
+        qDebug() << "Error inserting user:" << query.lastError().text();
     }
 
-    qDebug() << "Usuarios por defecto creados (si no existían)";
+    qDebug() << "Default users created (if they did not exist)";
 }
 

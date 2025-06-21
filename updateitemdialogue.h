@@ -24,7 +24,7 @@ public:
     void confirmUpdate();
     void loadItemImage();
     QString getBrand();
-    QString getSize(); // devuelve QString, aunque quizás conviene que devuelva int directamente
+    QString getSize(); // returns QString, although it might be better to return int directly
     QString getCategory();
     QString getDeposit();
 
@@ -35,7 +35,7 @@ private:
     Ui::UpdateItemDIalogue *ui;
     Item* currentItem; //to keep track wich is modified
     QString imageFilePath; //
-    int getMinimumStock();// meter con sql
+    int getMinimumStock();// Insert with Sql
     DatabaseManager* dbManager;
 
 };

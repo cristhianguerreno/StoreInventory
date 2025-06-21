@@ -286,7 +286,7 @@ MainWindow::MainWindow(QString r, DatabaseManager* db, QWidget *parent)
     ui->setupUi(this);
 
     if (role == "admin") {
-        QAction* manageUsersAction = new QAction("Gestionar Usuarios", this);
+        QAction* manageUsersAction = new QAction("Manage Users", this);
         connect(manageUsersAction, &QAction::triggered, this, [this]() {
             UserManagerDialog dlg(dbManager, this);
             dlg.exec();
@@ -296,16 +296,16 @@ MainWindow::MainWindow(QString r, DatabaseManager* db, QWidget *parent)
     }
 
 
-    // Inicializar base de datos
+    // Initialize database
     if (!dbManager->initializeDatabase()) {
-        QMessageBox::critical(this, "Error de Base de Datos",
-                              "No se pudo conectar a la base de datos MySQL");
+        QMessageBox::critical(this, "Database Error",
+                              "Could not connect to MySQL database");
     }
 
-    // Cargar datos desde la base de datos
+    // Load data from the database
     loadItemsFromDatabase();
 
-    // Conexiones de eventos
+    // Event Connections
     connect(ui->menuNewProduct, &QAction::triggered,
             this, &MainWindow::hanldeMenuItemNew);
 
@@ -318,18 +318,13 @@ MainWindow::MainWindow(QString r, DatabaseManager* db, QWidget *parent)
     connect(ui->menuEditSelectedProduct, &QAction::triggered,
             this, &MainWindow::handleMenuItemEdit);
 
-   /* connect(ui->menuSaveProducts, &QAction::triggered,
-            this, &MainWindow::handleSaveItems);
 
-    connect(ui->menuLoadProducts, &QAction::triggered,
-            this, &MainWindow::handleLoadItems);*/
-
-    // Timer para verificar stock bajo periódicamente
+    // Timer to check for low stock periodically
     QTimer* stockCheckTimer = new QTimer(this);
     connect(stockCheckTimer, &QTimer::timeout, this, &MainWindow::checkLowStock);
-    stockCheckTimer->start(60000); // Verificar cada minuto
+    stockCheckTimer->start(60000); // Verify every 5 minutes
 
-    // Verificación inicial de stock
+    // Initial stock check
     checkLowStock();
 }
 
@@ -352,14 +347,14 @@ void MainWindow::hanldeMenuItemNew()
 
     addItemDialogue.setModal(true);
     if (addItemDialogue.exec() == QDialog::Accepted && newItem != nullptr) {
-        // Guardar en base de datos
+        // Save to database
         if (dbManager->insertItem(newItem)) {
             productList.push_back(newItem);
-            addItemToList(newItem); // Método para agregar con colores
+            addItemToList(newItem); // Method for adding with colors
 
-            QMessageBox::information(this, "Éxito", "Producto agregado correctamente");
+            QMessageBox::information(this, "Success", "Product added successfully");
         } else {
-            QMessageBox::warning(this, "Error", "No se pudo guardar el producto en la base de datos");
+            QMessageBox::warning(this, "Error", "The product could not be saved to the database");
             delete newItem;
         }
     }
@@ -371,18 +366,18 @@ void MainWindow::removeSelectedProduct()
     if (index >= 0) {
         Item* theItem = productList.at(index);
 
-        // Eliminar de la base de datos
+        // Deletes from database
         if (dbManager->deleteItem(theItem->getId())) {
             delete theItem;
             productList.removeAt(index);
             delete ui->lstProducts->currentItem();
 
-            // Limpiar la vista
+            // Clean the view
             clearProductDisplay();
 
-            QMessageBox::information(this, "Éxito", "Producto eliminado correctamente");
+            QMessageBox::information(this, "Success", "Product successfully removed");
         } else {
-            QMessageBox::warning(this, "Error", "No se pudo eliminar el producto de la base de datos");
+            QMessageBox::warning(this, "Error", "The product could not be deleted from the database");
         }
     }
 }
@@ -406,19 +401,19 @@ void MainWindow::handleMenuItemEdit()
     if (index != -1) {
         Item* currentItem = productList.at(index);
         if (currentItem != nullptr) {
-            //  UpdateItemDIalogue updateItemDialogue(currentItem, nullptr);
+
             UpdateItemDIalogue updateItemDialogue(currentItem, dbManager);
 
             if (updateItemDialogue.exec() == QDialog::Accepted) {
-                // Actualizar en base de datos
+                // Update in database
                 if (dbManager->updateItem(currentItem)) {
-                    // Actualizar la lista visual
+                    // Update the visual list
                     updateItemInList(index, currentItem);
                     updateProductDisplay(currentItem);
 
-                    QMessageBox::information(this, "Éxito", "Producto actualizado correctamente");
+                    QMessageBox::information(this, "Success", "Product updated successfully");
                 } else {
-                    QMessageBox::warning(this, "Error", "No se pudo actualizar el producto en la base de datos");
+                    QMessageBox::warning(this, "Error", "The product could not be updated in the database");
                 }
             }
         }
@@ -427,27 +422,27 @@ void MainWindow::handleMenuItemEdit()
 
 void MainWindow::handleSaveItems()
 {
-    // Con MySQL, los datos ya se guardan automáticamente
-    QMessageBox::information(this, "Información",
-                             "Los datos se guardan automáticamente en la base de datos MySQL");
+    // With MySQL, data is now saved automatically.
+    QMessageBox::information(this, "Information",
+                             "Data is automatically saved to the MySQL database");
 }
 
 void MainWindow::handleLoadItems()
 {
     loadItemsFromDatabase();
-    QMessageBox::information(this, "Éxito", "Datos cargados desde la base de datos");
+    QMessageBox::information(this, "Success", "Data loaded from database");
 }
 
 void MainWindow::loadItemsFromDatabase()
 {
-    // Limpiar lista actual
+    // Clear current list
     for (Item* temp : productList) {
         delete temp;
     }
     productList.clear();
     ui->lstProducts->clear();
 
-    // Cargar desde base de datos
+    // Load from database
     productList = dbManager->getAllItems();
 
     for (Item* product : productList) {
@@ -459,20 +454,20 @@ void MainWindow::addItemToList(Item* item)
 {
     QString displayText = item->getName();
 
-    // Agregar indicador visual si está en stock bajo
+    // Add visual indicator if low stock
     if (item->isLowStock()) {
         displayText += " ⚠️ LOW STOCK";
     }
 
     QListWidgetItem* listItem = new QListWidgetItem(displayText);
 
-    // Colorear según el stock
+    // Color according to stock
     if (item->isLowStock()) {
-        listItem->setBackground(QBrush(QColor(255, 200, 200))); // Fondo rojo claro
-        listItem->setForeground(QBrush(QColor(139, 0, 0)));     // Texto rojo oscuro
+        listItem->setBackground(QBrush(QColor(255, 200, 200))); // Light red background
+        listItem->setForeground(QBrush(QColor(139, 0, 0)));     // Dark red text
     } else if (item->getQuantity() <= item->getMinimumStock() + 5) {
-        listItem->setBackground(QBrush(QColor(255, 255, 200))); // Fondo amarillo claro
-        listItem->setForeground(QBrush(QColor(139, 139, 0)));   // Texto amarillo oscuro
+        listItem->setBackground(QBrush(QColor(255, 255, 200))); // Light yellow background
+        listItem->setForeground(QBrush(QColor(139, 139, 0)));   // Dark yellow text
     }
 
     ui->lstProducts->addItem(listItem);
@@ -492,8 +487,8 @@ void MainWindow::updateItemInList(int index, Item* item)
             listItem->setBackground(QBrush(QColor(255, 255, 200)));
             listItem->setForeground(QBrush(QColor(139, 139, 0)));
         } else {
-            listItem->setBackground(QBrush(QColor(255, 255, 255))); // Blanco normal
-            listItem->setForeground(QBrush(QColor(0, 0, 0)));       // Negro normal
+            listItem->setBackground(QBrush(QColor(255, 255, 255))); // Normal white
+            listItem->setForeground(QBrush(QColor(0, 0, 0)));       // Normal black
         }
 
         listItem->setText(displayText);
@@ -508,9 +503,9 @@ void MainWindow::updateProductDisplay(Item* item)
     ui->lblSize->setText(QString::number(item->getSize()));
     ui->lblCategory->setText(item->getCategory());
     ui->lblDeposit->setText(item->getDeposit());
-    ui->lblMinimumStock->setText(QString::number(item->getMinimumStock())); // Nuevo label
+    ui->lblMinimumStock->setText(QString::number(item->getMinimumStock())); // New label
 
-    // Mostrar estado del stock
+    // Show stock status
     if (item->isLowStock()) {
         ui->lblStockStatus->setText("⚠️ LOW STOCK");
         ui->lblStockStatus->setStyleSheet("color: red; font-weight: bold;");
@@ -556,27 +551,27 @@ void MainWindow::checkLowStock()
     }
 
     if (!lowStockItems.isEmpty()) {
-        // Actualizar título de ventana con alerta
-        setWindowTitle("Sistema de Inventario - ⚠️ LOW STOCK (" +
-                       QString::number(lowStockItems.size()) + " productos)");
+        // Update window title with alert
+        setWindowTitle("Inventory system - ⚠️ LOW STOCK (" +
+                       QString::number(lowStockItems.size()) + " products)");
 
-        // Opcional: mostrar notificación cada cierto tiempo
+        // Optional: Show notification every so often
         static QTimer* notificationTimer = new QTimer(this);
         if (!notificationTimer->isActive()) {
-            notificationTimer->start(300000); // Cada 5 minutos
+            notificationTimer->start(300000); // Every 5 minutes
 
-            QString message = "Los siguientes productos tienen stock bajo:\n\n" +
+            QString message = "The following products are in low stock:\n\n" +
                               lowStockItems.join("\n");
 
             QMessageBox msgBox;
             msgBox.setIcon(QMessageBox::Warning);
-            msgBox.setWindowTitle("Alerta de Stock Bajo");
+            msgBox.setWindowTitle("Low Stock Alert");
             msgBox.setText(message);
             msgBox.setStandardButtons(QMessageBox::Ok);
             msgBox.exec();
         }
     } else {
-        setWindowTitle("Sistema de Inventario");
+        setWindowTitle("Inventory System");
     }
 }
 

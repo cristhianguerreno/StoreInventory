@@ -206,7 +206,7 @@ void AddItemDialogue::loadItemImage()
 #include <QFileDialog>
 #include <QIntValidator>
 #include <QFileDialog>
-#include <QIntValidator> //validar size
+#include <QIntValidator> //validate size
 
 AddItemDialogue::AddItemDialogue(Item*& newItem, DatabaseManager* dbManager, QWidget *parent)
     : QDialog(parent)
@@ -217,14 +217,14 @@ AddItemDialogue::AddItemDialogue(Item*& newItem, DatabaseManager* dbManager, QWi
 
     imageFilePath = "none.png";
 
-    // Validadores
+    // Validators
     ui->txtSize->setValidator(new QIntValidator(0, 10000, this));
-    //    ui->sbMinimumStock->setValidator(new QIntValidator(0, 1000, this)); // Nuevo campo
+    //    ui->sbMinimumStock->setValidator(new QIntValidator(0, 1000, this)); // New field
     ui->sbMinimumStock->setRange(0, 1000);
-    // Valor por defecto para stock mínimo
+    // Default value for minimum stock
     ui->sbMinimumStock->setValue(5);
 
-    // Conexiones de eventos
+    // Event Connections
     connect(ui->btnConfirmAdd, &QPushButton::clicked, this,
             &AddItemDialogue::confirmAdd);
 
@@ -250,19 +250,19 @@ void AddItemDialogue::confirmAdd()
     int size = getSize();
     QString category = getCategory();
     QString deposit = getDeposit();
-    int minimumStock = getMinimumStock(); // Nuevo campo
+    int minimumStock = getMinimumStock(); // New field
 
     if (productName.trimmed() != "" && quantity >= 1) {
-        // Constructor actualizado con stock mínimo
+        // Builder updated with minimum stock
         *newItem = new Item(productName, quantity, imageFilePath, brand,
                             size, category, deposit, minimumStock);
 
-        // Verificar si ya está en stock bajo al crearlo
+        // Check if it is already in low stock when creating it
         if ((*newItem)->isLowStock()) {
-            QMessageBox::warning(this, "Advertencia de Stock",
-                                 QString("¡ATENCIÓN! El producto '%1' tiene stock bajo.\n"
-                                         "Cantidad actual: %2\n"
-                                         "Stock mínimo: %3")
+            QMessageBox::warning(this, "Stock Warning",
+                                 QString("ATTENTION! Product '%1' is in low stock.\n"
+                                         "Current amount: %2\n"
+                                         "Minimun stock: %3")
                                      .arg(productName)
                                      .arg(quantity)
                                      .arg(minimumStock));
@@ -272,7 +272,7 @@ void AddItemDialogue::confirmAdd()
     }
     else {
         QMessageBox mb;
-        mb.setText("Debe tener un nombre válido y agregar al menos 1 item");
+        mb.setText("Must have a valid name and add at least 1 item");
         mb.exec();
     }
 }
@@ -294,14 +294,14 @@ void AddItemDialogue::loadItemImage()
 
     if (!QFile::exists(localPath)) {
         if (!QFile::copy(filename, localPath)) {
-            QMessageBox::warning(this, "Error", "No se pudo copiar la imagen.");
+            QMessageBox::warning(this, "Error", "Could not copy image.");
             return;
         }
     }
 
     QPixmap pixmap(localPath);
     if (pixmap.isNull()) {
-        QMessageBox::warning(this, "Error", "No se pudo cargar la imagen seleccionada.");
+        QMessageBox::warning(this, "Error", "The selected image could not be loaded.");
         return;
     }
 
@@ -326,7 +326,7 @@ QString AddItemDialogue::getDeposit() {
     return ui->txtDeposit->text();
 }
 
-// Nuevo método para obtener stock mínimo
+// New method to obtain minimum stock
 int AddItemDialogue::getMinimumStock() {
     return ui->sbMinimumStock->value();
 }
