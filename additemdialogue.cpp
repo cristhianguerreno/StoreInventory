@@ -62,7 +62,7 @@ void AddItemDialogue::confirmAdd() {
                                      .arg(minimumStock));
         }
 
-        this->close();
+        this->accept();
     } else {
         QMessageBox::warning(this, "Invalid Input", "You must provide a valid name and quantity of at least 1.");
     }
