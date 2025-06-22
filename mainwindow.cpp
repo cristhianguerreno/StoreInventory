@@ -28,8 +28,8 @@ MainWindow::MainWindow(QString r, DatabaseManager* db, QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->btnExportProducts, &QPushButton::clicked, this, &MainWindow::exportProductsToJson);
-    connect(ui->btnImportProducts, &QPushButton::clicked, this, &MainWindow::importProductsFromJson);
+    connect(ui->btnExportProducts, &QPushButton::clicked, this, &MainWindow::exportItemsToFile);
+    connect(ui->btnImportProducts, &QPushButton::clicked, this, &MainWindow::importItemsFromFile);
 
     // If user has 'admin' role, show user management menu option
     if (role == "admin") {
@@ -316,52 +316,65 @@ void MainWindow::checkLowStock()
     }
 }
 
-void MainWindow::exportProductsToJson() {
-    QString filename = QFileDialog::getSaveFileName(this, "Export Products", "", "JSON Files (*.json)");
-    if (filename.isEmpty()) return;
-
-    QJsonArray productArray;
+// Exportar a JSON en archivo fijo
+void MainWindow::exportItemsToFile() {
+    QJsonArray jsonArray;
     for (Item* item : productList) {
         QJsonObject obj;
         obj["name"] = item->getName();
         obj["quantity"] = item->getQuantity();
-        obj["image_path"] = item->getImageFilePath();
         obj["brand"] = item->getBrand();
         obj["size"] = item->getSize();
         obj["category"] = item->getCategory();
         obj["deposit"] = item->getDeposit();
         obj["minimum_stock"] = item->getMinimumStock();
-        productArray.append(obj);
+        obj["image_path"] = item->getImageFilePath();
+        // Agrega más campos si quieres
+
+        jsonArray.append(obj);
     }
 
-    QJsonDocument doc(productArray);
-    QFile file(filename);
+    QJsonDocument doc(jsonArray);
+    QFile file(exportFilePath);
     if (file.open(QIODevice::WriteOnly)) {
         file.write(doc.toJson());
         file.close();
-        QMessageBox::information(this, "Export Successful", "Products exported to JSON.");
+        QMessageBox::information(this, "Exportar", "Productos exportados correctamente.");
     } else {
-        QMessageBox::warning(this, "Error", "Could not save file.");
+        QMessageBox::warning(this, "Error", "No se pudo abrir el archivo para exportar.");
     }
 }
 
-void MainWindow::importProductsFromJson() {
-    QString filename = QFileDialog::getOpenFileName(this, "Import Products", "", "JSON Files (*.json)");
-    if (filename.isEmpty()) return;
-
-    QFile file(filename);
+// Importar desde JSON archivo fijo
+void MainWindow::importItemsFromFile() {
+    QFile file(importFilePath);
     if (!file.open(QIODevice::ReadOnly)) {
-        QMessageBox::warning(this, "Error", "Could not open file.");
+        QMessageBox::warning(this, "Error", "No se pudo abrir el archivo para importar.");
         return;
     }
 
     QByteArray data = file.readAll();
-    QJsonDocument doc = QJsonDocument::fromJson(data);
-    QJsonArray array = doc.array();
+    file.close();
 
-    for (const QJsonValue& val : array) {
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    if (!doc.isArray()) {
+        QMessageBox::warning(this, "Error", "Formato JSON inválido.");
+        return;
+    }
+
+    QJsonArray jsonArray = doc.array();
+
+    // Opcional: limpiar lista y base antes de importar, o agregar
+    for (Item* item : productList) {
+        delete item;
+    }
+    productList.clear();
+    ui->lstProducts->clear();
+
+    for (auto val : jsonArray) {
         QJsonObject obj = val.toObject();
-        Item* item = new Item(
+
+        Item* newItem = new Item(
             obj["name"].toString(),
             obj["quantity"].toInt(),
             obj["image_path"].toString(),
@@ -372,13 +385,12 @@ void MainWindow::importProductsFromJson() {
             obj["minimum_stock"].toInt()
             );
 
-        if (dbManager->insertItem(item)) {
-            productList.append(item);
-            addItemToList(item);
-        } else {
-            delete item;
-        }
+        // Inserta en base de datos
+        dbManager->insertItem(newItem);
+
+        productList.push_back(newItem);
+        addItemToList(newItem);
     }
 
-    QMessageBox::information(this, "Import Successful", "Products imported from JSON.");
+    QMessageBox::information(this, "Importar", "Productos importados correctamente.");
 }

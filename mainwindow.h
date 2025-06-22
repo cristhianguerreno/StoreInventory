@@ -45,12 +45,16 @@ private:
     void updateProductDisplay(Item* item);  // Update the item details in the UI
     void clearProductDisplay();             // Clear product detail display
 
-    void exportProductsToJson();   // o exportProductsToCsv()
-    void importProductsFromJson(); // o importProductsFromCsv()
+    const QString exportFilePath = "./products.json";
+    const QString importFilePath = "./products.json";
 
 private slots:
     void checkLowStock();                   // Check for items below minimum stock
     // void openUserManager();              // Uncomment to enable user manager
+
+    void exportItemsToFile();
+    void importItemsFromFile();
+
 };
 
 #endif // MAINWINDOW_H
