@@ -8,10 +8,11 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     DatabaseManager dbManager;
-    dbManager.initializeDatabase();
+    dbManager.initializeDatabase();  // Initialize the database connection and create tables if needed
 
     StartDialog login;
-    if (login.exec() == QDialog::Accepted) {  // ✅ Solo entra si el login fue exitoso
+    if (login.exec() == QDialog::Accepted) {
+        // If login was successful, retrieve user role and open main window
         QString userRole = login.getCurrentRole();
 
         MainWindow w(userRole, &dbManager);
@@ -19,7 +20,6 @@ int main(int argc, char *argv[])
         return a.exec();
     }
 
-    // ❌ Si cerró el diálogo o hizo cancel, no continúa
+    // If login dialog was closed or cancelled, exit the application
     return 0;
 }
-

@@ -1,4 +1,3 @@
-
 #ifndef ADDITEMDIALOGUE_H
 #define ADDITEMDIALOGUE_H
 
@@ -14,24 +13,39 @@ class AddItemDialogue : public QDialog
 {
     Q_OBJECT
 
-public:            //take a item pointer by refernce
-    explicit AddItemDialogue(Item*& newItem,QWidget *parent = nullptr);
+public:
+    // Constructor that receives a reference to an Item pointer
+    explicit AddItemDialogue(Item*& newItem, QWidget *parent = nullptr);
+
+    // Constructor that receives a reference to an Item pointer and a database manager
     explicit AddItemDialogue(Item*& newItem, DatabaseManager* dbManager, QWidget *parent = nullptr);
-    DatabaseManager* dbManager;
+
     ~AddItemDialogue();
+
+    // Confirm the addition of the item (validate and save)
     void confirmAdd();
+
+    // Open a file dialog and load an image for the item
     void loadItemImage();
+
+    // Database manager used to interact with the database
+    DatabaseManager* dbManager;
 
 private:
     Ui::AddItemDialogue *ui;
-    Item**newItem;//points to the pointer to modify the actual pointer
+
+    // Pointer to pointer of Item: allows modifying the actual Item object
+    Item** newItem;
+
+    // Path of the selected image
     QString imageFilePath;
-    QString getBrand();//agregado
+
+    // Get item details from UI inputs
+    QString getBrand();
     int getSize();
     QString getCategory();
     QString getDeposit();
-    int getMinimumStock(); //meter con sql
-
+    int getMinimumStock(); // Retrieves the minimum stock value from the form
 };
 
 #endif // ADDITEMDIALOGUE_H

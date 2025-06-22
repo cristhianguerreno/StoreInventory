@@ -1,272 +1,9 @@
-/*
-#include "mainwindow.h"
-#include "additemdialogue.h"
-#include "ui_mainwindow.h"
-#include "updateitemdialogue.h"
-
-#include <QFile>
-#include <QMessageBox>
-#include <QTextStream>
-#include <QString>
-#include <QStringList>
-
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
-    //connect the action of triggering menuNewProduct
-    //to the function in MainWindow::hanldeMenuItemNew
-    connect(ui->menuNewProduct, &QAction::triggered,
-            this, &MainWindow::hanldeMenuItemNew) ;
-
-    connect(ui->btnRemove, &QPushButton::clicked,
-            this, &MainWindow::removeSelectedProduct) ;
-
-    connect(ui->lstProducts, &QListWidget::itemClicked,
-            this, &MainWindow::handleItemClick);
-
-    connect(ui->menuEditSelectedProduct, &QAction::triggered,
-            this, &MainWindow::handleMenuItemEdit);
-
-    connect(ui->menuSaveProducts, &QAction::triggered,
-            this, &MainWindow::handleSaveItems);
-
-    connect(ui->menuLoadProducts, &QAction::triggered,
-            this, &MainWindow::handleLoadItems);
-
-/
-    connect(ui->menuBrand, &QAction::triggered,
-            this, &MainWindow::handleManageBrand);
-
-    connect(ui->menuCategory, &QAction::triggered,
-            this, &MainWindow::handleManageCategories);
-
-    connect(ui->menuDeposit, &QAction::triggered,
-            this, &MainWindow::handleManageDeposit);
-
-
-};
-
-MainWindow::~MainWindow()
-{
-    //free up product list memory
-    for (Item* product : productList) //for ptr in list
-    {
-        delete product;
-    }
-    productList.clear();
-
-    delete ui;
-}
-
-void MainWindow::hanldeMenuItemNew()
-{
-    //creats a menu item
-    Item* newItem = nullptr; //initializes the nullptr because doesnt point anything yet
-    AddItemDialogue addItemDialogue(newItem, nullptr); //pass new item by reference
-
-    addItemDialogue.setModal(true);
-    addItemDialogue.exec();
-
-    if ( newItem != nullptr ) //   if is not null it means that something has been selected
-    {
-        //introducting the full item data
-        productList.push_back(newItem); //push newitem in the list
-        //because we do this at same the they will be parallel arrays
-        ui->lstProducts->addItem(newItem->getName()); //just for viewing
-
-    }
-}
-
-void MainWindow::removeSelectedProduct()
-{
-    int index= ui->lstProducts->currentRow();
-    if (index>=0)
-    {
-        //remove from vector
-        Item* theItem = productList.at(index);
-        delete theItem;
-        productList.removeAt(index);
-        //remove from list widget
-        delete ui->lstProducts->currentItem();
-    } //end if
-
-    // set image to"none.png"
-    QPixmap pixmap("none.png");
-    ui->lblImage->setPixmap(pixmap);
-
-    ui->lblProductName->setText("");
-    ui->lblQuantity->setNum(0);
-    ui->lblBrand->setText("");
-    ui->lblSize->setText("");
-    ui->lblCategory->setText("");
-    ui->lblDeposit->setText("");
-
-
-} //end of removeSelectedProduct
-
-void MainWindow::handleItemClick(QListWidgetItem* item){
-    int index= item->listWidget()->currentRow();
-
-    if (index!=-1) //if its -1 means nothing valid was selected
-    {
-        Item* currentItem = productList.at(index);
-        if (currentItem!= nullptr)
-        {
-            ui-> lblProductName -> setText(currentItem -> getName());
-            ui-> lblQuantity -> setText(QString::number(currentItem -> getQuantity()));
-            ui->lblBrand->setText(currentItem->getBrand());//cambiado
-            ui->lblSize->setText(QString::number(currentItem->getSize()));
-            ui->lblCategory->setText(currentItem->getCategory());
-            ui->lblDeposit->setText(currentItem->getDeposit());
-
-
-            QPixmap pixmap(currentItem -> getImageFilePath());
-            ui-> lblImage -> setPixmap(pixmap);
-            ui-> lblImage -> setScaledContents(true);
-
-        } //end if
-
-
-    }//end   if
-}//end handleItemClick
-
-void MainWindow::handleMenuItemEdit()
-{
-    int index = ui->lstProducts->currentRow();
-
-    if (index !=  -1) //cht pq si es 0 apunta al primero
-    {
-        Item* currentItem = productList.at(index);
-        if (currentItem != nullptr)
-        {
-            UpdateItemDIalogue updateItemDialogue(currentItem, nullptr);
-            updateItemDialogue.exec();
-
-            ui->lstProducts->currentItem()->setText(currentItem->getName()); //aggchgpt
-
-
-            //make sure UI is updated
-            ui->lblProductName -> setText(currentItem->getName());
-            ui->lblQuantity -> setText(QString::number(currentItem->getQuantity()));
-            ui->lblBrand ->setText(currentItem->getBrand()); //cambiado
-            ui->lblSize ->setText(QString::number(currentItem->getSize()));
-            ui->lblCategory ->setText(currentItem->getCategory());
-            ui->lblDeposit ->setText(currentItem->getDeposit());
-
-            QPixmap pixmap(currentItem -> getImageFilePath());
-            ui->lblImage ->setPixmap(pixmap);
-            ui->lblImage->setScaledContents(true);
-
-        } //end inner if
-
-
-    }        //end if
-} //end handleMenuItem
-
-
-void MainWindow::handleSaveItems()
-{
-    QFile outputFile("products.txt");
-
-    outputFile.open(QIODevice::WriteOnly |
-                    QIODevice::Text);
-
-    QTextStream out(&outputFile);
-
-    for (Item* product : productList) //range base for loop
-    {
-        out<<product->getName()<<",";
-        out<<product->getQuantity()<<",";
-        out<<product->getImageFilePath()<<",";
-        out<<product->getBrand()<<",";
-        out<<product->getSize()<<",";
-        out<<product->getCategory()<<",";
-        out<<product->getDeposit()<<Qt::endl;
-    } //end for
-
-
-    out.flush();
-    outputFile.close();
-
-
-} //end handsaveitems
-
-void MainWindow::handleLoadItems()
-{
-    QFile inputFile("products.txt");
-
-    inputFile.open(QIODevice::ReadOnly |
-                   QIODevice::Text);
-    QTextStream in(&inputFile);
-
-    //clear current list and vector
-    for (Item* temp : productList) // for item pointer temp in productlist //if dont some data can be duplicate
-    {
-        delete temp; //delete     memory
-    } //end for
-
-    productList.clear();//data model actual data
-    ui->lstProducts-> clear(); // viewer list
-
-    while (! in.atEnd())
-    {
-        QString line= in.readLine();
-        QStringList info=line.split(","); //we telling to split every time , is present
-
-        if (info.size() >= 7) {//cambiar si se quiero meter mas datos
-            // Agregar al list widget
-            ui->lstProducts->addItem(info.at(0));
-
-
-        //handle vector     ///cambiado para meter mas cosas
-            Item* product = new Item (info.at(0),
-                                 info.at(1).toInt(), info.at(2), info.at(3),
-                                     info.at(4).toInt(), info.at(5),info.at(6)); //name, quantity, image path
-
-        productList.push_back(product);
-
-    }
-    }
-        //end while
-
-    in.flush();
-    inputFile.close();
-
-} //endhandloadItems
-
-
-void MainWindow::handleManageBrand()
-{
-    BrandManagerDialog brandDialog(this);
-    brandDialog.setModal(true);
-    brandDialog.exec();
-}//end handlemanagebrand
-
-void MainWindow::handleManageCategories()
-{
-    // Crear y mostrar el diálogo de gestión de categorías
-    CategoryManagerDialog categoryDialog(this);
-    categoryDialog.setModal(true);
-    categoryDialog.exec();
-}//endhandlemanagecategories
-
-void MainWindow::handleManageDeposit()
-{
-    DepositManagerDialog depositDialog(this);
-    depositDialog.setModal(true);
-    depositDialog.exec();
-}//end handlemanagedeposit
-*/
-
 #include "mainwindow.h"
 #include "additemdialogue.h"
 #include "ui_mainwindow.h"
 #include "updateitemdialogue.h"
 #include "databasemanager.h"
 #include "usermanagerdialog.h"
-
 
 #include <QMessageBox>
 #include <QTimer>
@@ -281,60 +18,50 @@ MainWindow::MainWindow(QString r, DatabaseManager* db, QWidget *parent)
     ui(new Ui::MainWindow),
     dbManager(db),
     role(r)
-
 {
     ui->setupUi(this);
 
+    // If user has 'admin' role, show user management menu option
     if (role == "admin") {
-        QAction* manageUsersAction = new QAction("Gestionar Usuarios", this);
+        QAction* manageUsersAction = new QAction("Manage Users", this);
         connect(manageUsersAction, &QAction::triggered, this, [this]() {
             UserManagerDialog dlg(dbManager, this);
             dlg.exec();
         });
-
         ui->menuFile->addAction(manageUsersAction);
     }
 
-
-    // Inicializar base de datos
+    // Attempt to initialize database connection
     if (!dbManager->initializeDatabase()) {
-        QMessageBox::critical(this, "Error de Base de Datos",
-                              "No se pudo conectar a la base de datos MySQL");
+        QMessageBox::critical(this, "Database Error",
+                              "Could not connect to the MySQL database");
     }
 
-    // Cargar datos desde la base de datos
+    // Load inventory items from database on startup
     loadItemsFromDatabase();
 
-    // Conexiones de eventos
+    // Connect UI actions to their handlers
     connect(ui->menuNewProduct, &QAction::triggered,
             this, &MainWindow::hanldeMenuItemNew);
-
     connect(ui->btnRemove, &QPushButton::clicked,
             this, &MainWindow::removeSelectedProduct);
-
     connect(ui->lstProducts, &QListWidget::itemClicked,
             this, &MainWindow::handleItemClick);
-
     connect(ui->menuEditSelectedProduct, &QAction::triggered,
             this, &MainWindow::handleMenuItemEdit);
 
-   /* connect(ui->menuSaveProducts, &QAction::triggered,
-            this, &MainWindow::handleSaveItems);
-
-    connect(ui->menuLoadProducts, &QAction::triggered,
-            this, &MainWindow::handleLoadItems);*/
-
-    // Timer para verificar stock bajo periódicamente
+    // Set up timer to periodically check for low stock items
     QTimer* stockCheckTimer = new QTimer(this);
     connect(stockCheckTimer, &QTimer::timeout, this, &MainWindow::checkLowStock);
-    stockCheckTimer->start(60000); // Verificar cada minuto
+    stockCheckTimer->start(60000); // every 60 seconds
 
-    // Verificación inicial de stock
+    // Do an initial check for low stock items
     checkLowStock();
 }
 
 MainWindow::~MainWindow()
 {
+    // Clean up dynamically allocated memory for products
     for (Item* product : productList) {
         delete product;
     }
@@ -347,19 +74,18 @@ MainWindow::~MainWindow()
 void MainWindow::hanldeMenuItemNew()
 {
     Item* newItem = nullptr;
-    // AddItemDialogue addItemDialogue(newItem, nullptr);
     AddItemDialogue addItemDialogue(newItem, dbManager);
 
     addItemDialogue.setModal(true);
+    // If dialog accepted and item was created
     if (addItemDialogue.exec() == QDialog::Accepted && newItem != nullptr) {
-        // Guardar en base de datos
         if (dbManager->insertItem(newItem)) {
             productList.push_back(newItem);
-            addItemToList(newItem); // Método para agregar con colores
+            addItemToList(newItem); // visually add to list with stock coloring
 
-            QMessageBox::information(this, "Éxito", "Producto agregado correctamente");
+            QMessageBox::information(this, "Success", "Product successfully added");
         } else {
-            QMessageBox::warning(this, "Error", "No se pudo guardar el producto en la base de datos");
+            QMessageBox::warning(this, "Error", "Failed to insert product into database");
             delete newItem;
         }
     }
@@ -371,18 +97,18 @@ void MainWindow::removeSelectedProduct()
     if (index >= 0) {
         Item* theItem = productList.at(index);
 
-        // Eliminar de la base de datos
+        // Attempt to remove item from database
         if (dbManager->deleteItem(theItem->getId())) {
             delete theItem;
             productList.removeAt(index);
             delete ui->lstProducts->currentItem();
 
-            // Limpiar la vista
+            // Clear UI display since item was removed
             clearProductDisplay();
 
-            QMessageBox::information(this, "Éxito", "Producto eliminado correctamente");
+            QMessageBox::information(this, "Success", "Product successfully deleted");
         } else {
-            QMessageBox::warning(this, "Error", "No se pudo eliminar el producto de la base de datos");
+            QMessageBox::warning(this, "Error", "Failed to delete product from database");
         }
     }
 }
@@ -406,19 +132,16 @@ void MainWindow::handleMenuItemEdit()
     if (index != -1) {
         Item* currentItem = productList.at(index);
         if (currentItem != nullptr) {
-            //  UpdateItemDIalogue updateItemDialogue(currentItem, nullptr);
             UpdateItemDIalogue updateItemDialogue(currentItem, dbManager);
 
             if (updateItemDialogue.exec() == QDialog::Accepted) {
-                // Actualizar en base de datos
                 if (dbManager->updateItem(currentItem)) {
-                    // Actualizar la lista visual
                     updateItemInList(index, currentItem);
                     updateProductDisplay(currentItem);
 
-                    QMessageBox::information(this, "Éxito", "Producto actualizado correctamente");
+                    QMessageBox::information(this, "Success", "Product updated successfully");
                 } else {
-                    QMessageBox::warning(this, "Error", "No se pudo actualizar el producto en la base de datos");
+                    QMessageBox::warning(this, "Error", "Failed to update product in database");
                 }
             }
         }
@@ -427,27 +150,27 @@ void MainWindow::handleMenuItemEdit()
 
 void MainWindow::handleSaveItems()
 {
-    // Con MySQL, los datos ya se guardan automáticamente
-    QMessageBox::information(this, "Información",
-                             "Los datos se guardan automáticamente en la base de datos MySQL");
+    // Data is automatically saved in MySQL, no file save needed
+    QMessageBox::information(this, "Information",
+                             "Data is automatically saved in the MySQL database");
 }
 
 void MainWindow::handleLoadItems()
 {
     loadItemsFromDatabase();
-    QMessageBox::information(this, "Éxito", "Datos cargados desde la base de datos");
+    QMessageBox::information(this, "Success", "Data loaded from database");
 }
 
 void MainWindow::loadItemsFromDatabase()
 {
-    // Limpiar lista actual
+    // Clear current product list and UI list
     for (Item* temp : productList) {
         delete temp;
     }
     productList.clear();
     ui->lstProducts->clear();
 
-    // Cargar desde base de datos
+    // Load products from the database and update UI list
     productList = dbManager->getAllItems();
 
     for (Item* product : productList) {
@@ -459,20 +182,20 @@ void MainWindow::addItemToList(Item* item)
 {
     QString displayText = item->getName();
 
-    // Agregar indicador visual si está en stock bajo
+    // Add warning label for low stock
     if (item->isLowStock()) {
         displayText += " ⚠️ LOW STOCK";
     }
 
     QListWidgetItem* listItem = new QListWidgetItem(displayText);
 
-    // Colorear según el stock
+    // Apply color coding based on stock level
     if (item->isLowStock()) {
-        listItem->setBackground(QBrush(QColor(255, 200, 200))); // Fondo rojo claro
-        listItem->setForeground(QBrush(QColor(139, 0, 0)));     // Texto rojo oscuro
+        listItem->setBackground(QBrush(QColor(255, 200, 200))); // Light red background
+        listItem->setForeground(QBrush(QColor(139, 0, 0)));     // Dark red text
     } else if (item->getQuantity() <= item->getMinimumStock() + 5) {
-        listItem->setBackground(QBrush(QColor(255, 255, 200))); // Fondo amarillo claro
-        listItem->setForeground(QBrush(QColor(139, 139, 0)));   // Texto amarillo oscuro
+        listItem->setBackground(QBrush(QColor(255, 255, 200))); // Light yellow
+        listItem->setForeground(QBrush(QColor(139, 139, 0)));   // Dark yellow
     }
 
     ui->lstProducts->addItem(listItem);
@@ -492,8 +215,8 @@ void MainWindow::updateItemInList(int index, Item* item)
             listItem->setBackground(QBrush(QColor(255, 255, 200)));
             listItem->setForeground(QBrush(QColor(139, 139, 0)));
         } else {
-            listItem->setBackground(QBrush(QColor(255, 255, 255))); // Blanco normal
-            listItem->setForeground(QBrush(QColor(0, 0, 0)));       // Negro normal
+            listItem->setBackground(QBrush(QColor(255, 255, 255))); // Default white background
+            listItem->setForeground(QBrush(QColor(0, 0, 0)));       // Default black text
         }
 
         listItem->setText(displayText);
@@ -502,15 +225,16 @@ void MainWindow::updateItemInList(int index, Item* item)
 
 void MainWindow::updateProductDisplay(Item* item)
 {
+    // Update UI labels with product information
     ui->lblProductName->setText(item->getName());
     ui->lblQuantity->setText(QString::number(item->getQuantity()));
     ui->lblBrand->setText(item->getBrand());
     ui->lblSize->setText(QString::number(item->getSize()));
     ui->lblCategory->setText(item->getCategory());
     ui->lblDeposit->setText(item->getDeposit());
-    ui->lblMinimumStock->setText(QString::number(item->getMinimumStock())); // Nuevo label
+    ui->lblMinimumStock->setText(QString::number(item->getMinimumStock()));
 
-    // Mostrar estado del stock
+    // Show stock level warning
     if (item->isLowStock()) {
         ui->lblStockStatus->setText("⚠️ LOW STOCK");
         ui->lblStockStatus->setStyleSheet("color: red; font-weight: bold;");
@@ -522,6 +246,7 @@ void MainWindow::updateProductDisplay(Item* item)
         ui->lblStockStatus->setStyleSheet("color: green; font-weight: bold;");
     }
 
+    // Display product image
     QPixmap pixmap(item->getImageFilePath());
     ui->lblImage->setPixmap(pixmap);
     ui->lblImage->setScaledContents(true);
@@ -529,6 +254,7 @@ void MainWindow::updateProductDisplay(Item* item)
 
 void MainWindow::clearProductDisplay()
 {
+    // Reset product display labels and image
     QPixmap pixmap("none.png");
     ui->lblImage->setPixmap(pixmap);
 
@@ -548,7 +274,7 @@ void MainWindow::checkLowStock()
 
     for (Item* item : productList) {
         if (item->isLowStock()) {
-            lowStockItems.append(QString("%1 (Cantidad: %2, Mínimo: %3)")
+            lowStockItems.append(QString("%1 (Qty: %2, Min: %3)")
                                      .arg(item->getName())
                                      .arg(item->getQuantity())
                                      .arg(item->getMinimumStock()));
@@ -556,27 +282,26 @@ void MainWindow::checkLowStock()
     }
 
     if (!lowStockItems.isEmpty()) {
-        // Actualizar título de ventana con alerta
-        setWindowTitle("Sistema de Inventario - ⚠️ LOW STOCK (" +
-                       QString::number(lowStockItems.size()) + " productos)");
+        // Update window title with low stock warning
+        setWindowTitle("Inventory System - ⚠️ LOW STOCK (" +
+                       QString::number(lowStockItems.size()) + " items)");
 
-        // Opcional: mostrar notificación cada cierto tiempo
+        // Show low stock alert once every 5 minutes
         static QTimer* notificationTimer = new QTimer(this);
         if (!notificationTimer->isActive()) {
-            notificationTimer->start(300000); // Cada 5 minutos
+            notificationTimer->start(300000); // 5 minutes
 
-            QString message = "Los siguientes productos tienen stock bajo:\n\n" +
+            QString message = "The following products are low on stock:\n\n" +
                               lowStockItems.join("\n");
 
             QMessageBox msgBox;
             msgBox.setIcon(QMessageBox::Warning);
-            msgBox.setWindowTitle("Alerta de Stock Bajo");
+            msgBox.setWindowTitle("Low Stock Alert");
             msgBox.setText(message);
             msgBox.setStandardButtons(QMessageBox::Ok);
             msgBox.exec();
         }
     } else {
-        setWindowTitle("Sistema de Inventario");
+        setWindowTitle("Inventory System");
     }
 }
-

@@ -1,19 +1,20 @@
 QT += core gui
-#This tells Qt to use the core library (basic functions) and
-#the GUI library (for windows, buttons, etc.)
-#HOLAAAAAAAAAAAAAAA
+# Use the Qt Core module (non-GUI functionality)
+# and the GUI module (for windows, buttons, etc.)
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+# Include the Widgets module if using Qt version > 4
+
 QT += sql
+# Include the SQL module for database support
 
 CONFIG += c++17
-#This sets the C++ version to C++17
+# Set the C++ language standard to C++17
 
-# You can make your code fail to compile if it uses deprecated APIs.
-# In order to do so, uncomment the following line.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+# Uncomment the following line to disable deprecated APIs before Qt 6.0.0
+# DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000
 
-#Main C++ code files that Qt will compile (build)
+# C++ source files to be compiled
 SOURCES += \
     Item.cpp \
     additemdialogue.cpp \
@@ -24,7 +25,7 @@ SOURCES += \
     updateitemdialogue.cpp \
     usermanagerdialog.cpp
 
-#Files that define the structure of the classes (what functions and variables they have)
+# Header files (class declarations)
 HEADERS += \
     Item.h \
     additemdialogue.h \
@@ -34,8 +35,7 @@ HEADERS += \
     updateitemdialogue.h \
     usermanagerdialog.h
 
-#These are files created using Qt Designer (visual editor)
-#They describe how the windows and dialogs look.
+# UI files designed with Qt Designer
 FORMS += \
     additemdialogue.ui \
     mainwindow.ui \
@@ -43,12 +43,9 @@ FORMS += \
     updateitemdialogue.ui \
     usermanagerdialog.ui
 
-# Default rules for deployment.
+# Default rules for deployment depending on platform
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-#lists other files that are not code but are part of the project
-DISTFILES += \
-    .gitignore \
-    README.md
+# Other project-

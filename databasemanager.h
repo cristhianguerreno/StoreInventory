@@ -1,4 +1,3 @@
-
 #ifndef DATABASEMANAGER_H
 #define DATABASEMANAGER_H
 
@@ -12,31 +11,37 @@
 #include <QPixmap>
 #include "item.h"
 
-
 class DatabaseManager {
 private:
-    QSqlDatabase db; // ← ESTA LÍNEA ES CRUCIAL
+    QSqlDatabase db; // Main database connection
+
+    // Converts a QPixmap to a QByteArray (for storing in the database)
     QByteArray pixmapToByteArray(const QPixmap& pixmap);
+
+    // Converts a QByteArray back to a QPixmap (for displaying images)
     QPixmap byteArrayToPixmap(const QByteArray& byteArray);
 
 public:
     DatabaseManager();
     ~DatabaseManager();
 
+    // Initializes and opens the database connection
     bool initializeDatabase();
+
+    // Creates required tables if they do not exist
     bool createTables();
+
+    // Creates default users if none exist
     void createDefaultUsers();
 
-    // CRUD operations
+    // CRUD operations for Item
     bool insertItem(Item* item);
     bool updateItem(Item* item);
     bool deleteItem(int id);
     QList<Item*> getAllItems();
     Item* getItemById(int id);
 
-    // Utility methods
-    //QByteArray pixmapToByteArray(const QPixmap& pixmap);
-    //QPixmap byteArrayToPixmap(const QByteArray& byteArray);
+    // Saves an image to the database from a given file path
     bool saveImageToDatabase(const QString& imagePath);
 };
 
