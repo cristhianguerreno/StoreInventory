@@ -13,12 +13,6 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-//para los archivos en Json kuera
-#include <QFileDialog>
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QFile>
 
 MainWindow::MainWindow(QString r, DatabaseManager* db, QWidget *parent)
     : QMainWindow(parent),
@@ -28,8 +22,6 @@ MainWindow::MainWindow(QString r, DatabaseManager* db, QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->btnExportProducts, &QPushButton::clicked, this, &MainWindow::exportProductsToJson);
-    connect(ui->btnImportProducts, &QPushButton::clicked, this, &MainWindow::importProductsFromJson);
 
     // If user has 'admin' role, show user management menu option
     if (role == "admin") {
@@ -316,69 +308,4 @@ void MainWindow::checkLowStock()
     }
 }
 
-void MainWindow::exportProductsToJson() {
-    QString filename = QFileDialog::getSaveFileName(this, "Export Products", "", "JSON Files (*.json)");
-    if (filename.isEmpty()) return;
 
-    QJsonArray productArray;
-    for (Item* item : productList) {
-        QJsonObject obj;
-        obj["name"] = item->getName();
-        obj["quantity"] = item->getQuantity();
-        obj["image_path"] = item->getImageFilePath();
-        obj["brand"] = item->getBrand();
-        obj["size"] = item->getSize();
-        obj["category"] = item->getCategory();
-        obj["deposit"] = item->getDeposit();
-        obj["minimum_stock"] = item->getMinimumStock();
-        productArray.append(obj);
-    }
-
-    QJsonDocument doc(productArray);
-    QFile file(filename);
-    if (file.open(QIODevice::WriteOnly)) {
-        file.write(doc.toJson());
-        file.close();
-        QMessageBox::information(this, "Export Successful", "Products exported to JSON.");
-    } else {
-        QMessageBox::warning(this, "Error", "Could not save file.");
-    }
-}
-
-void MainWindow::importProductsFromJson() {
-    QString filename = QFileDialog::getOpenFileName(this, "Import Products", "", "JSON Files (*.json)");
-    if (filename.isEmpty()) return;
-
-    QFile file(filename);
-    if (!file.open(QIODevice::ReadOnly)) {
-        QMessageBox::warning(this, "Error", "Could not open file.");
-        return;
-    }
-
-    QByteArray data = file.readAll();
-    QJsonDocument doc = QJsonDocument::fromJson(data);
-    QJsonArray array = doc.array();
-
-    for (const QJsonValue& val : array) {
-        QJsonObject obj = val.toObject();
-        Item* item = new Item(
-            obj["name"].toString(),
-            obj["quantity"].toInt(),
-            obj["image_path"].toString(),
-            obj["brand"].toString(),
-            obj["size"].toInt(),
-            obj["category"].toString(),
-            obj["deposit"].toString(),
-            obj["minimum_stock"].toInt()
-            );
-
-        if (dbManager->insertItem(item)) {
-            productList.append(item);
-            addItemToList(item);
-        } else {
-            delete item;
-        }
-    }
-
-    QMessageBox::information(this, "Import Successful", "Products imported from JSON.");
-}

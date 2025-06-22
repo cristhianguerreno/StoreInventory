@@ -45,8 +45,6 @@ private:
     void updateProductDisplay(Item* item);  // Update the item details in the UI
     void clearProductDisplay();             // Clear product detail display
 
-    void exportProductsToJson();   // o exportProductsToCsv()
-    void importProductsFromJson(); // o importProductsFromCsv()
 
 private slots:
     void checkLowStock();                   // Check for items below minimum stock

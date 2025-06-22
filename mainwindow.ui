@@ -265,32 +265,6 @@
      <string>lblStockStatus</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnExportProducts">
-    <property name="geometry">
-     <rect>
-      <x>520</x>
-      <y>360</y>
-      <width>90</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Export all</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnImportProducts">
-    <property name="geometry">
-     <rect>
-      <x>660</x>
-      <y>360</y>
-      <width>90</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Import all</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
