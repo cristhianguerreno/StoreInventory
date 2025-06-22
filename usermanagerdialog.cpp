@@ -32,13 +32,28 @@ void UserManagerDialog::handleCreateUser()
     QString password = ui->txtPassword->text();
     QString role = ui->cbRole->currentText();
 
-    // Validate that username and password are not empty
+    // Validar que no estén vacíos
     if (username.isEmpty() || password.isEmpty()) {
         QMessageBox::warning(this, "Missing Fields", "Please fill in all the fields.");
         return;
     }
 
-    // Prepare an SQL INSERT statement using bound parameters
+    // Verificar si el usuario ya existe
+    QSqlQuery checkQuery;
+    checkQuery.prepare("SELECT COUNT(*) FROM users WHERE username = :username");
+    checkQuery.bindValue(":username", username);
+    if (checkQuery.exec() && checkQuery.next()) {
+        int count = checkQuery.value(0).toInt();
+        if (count > 0) {
+            QMessageBox::warning(this, "Duplicate User", "The username already exists. Please choose another.");
+            return;  // No continuar con la inserción
+        }
+    } else {
+        QMessageBox::warning(this, "Database Error", "Failed to verify existing users.\n" + checkQuery.lastError().text());
+        return;
+    }
+
+    // Insertar usuario nuevo
     QSqlQuery query;
     query.prepare("INSERT INTO users (username, password, role) "
                   "VALUES (:username, :password, :role)");
@@ -46,13 +61,11 @@ void UserManagerDialog::handleCreateUser()
     query.bindValue(":password", password);
     query.bindValue(":role", role);
 
-    // Try to execute the query and show the result
     if (query.exec()) {
         QMessageBox::information(this, "Success", "User created successfully.");
         ui->txtUsername->clear();
         ui->txtPassword->clear();
     } else {
-        // If insertion fails, show the SQL error
         QMessageBox::warning(this, "Database Error",
                              "Failed to create user.\n" + query.lastError().text());
     }
