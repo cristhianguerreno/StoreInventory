@@ -52,10 +52,12 @@ MainWindow::MainWindow(QString r, DatabaseManager* db, QWidget *parent)
     connect(ui->menuEditSelectedProduct, &QAction::triggered,
             this, &MainWindow::handleMenuItemEdit);
 
+
+    /*
     // Set up timer to periodically check for low stock items
     QTimer* stockCheckTimer = new QTimer(this);
     connect(stockCheckTimer, &QTimer::timeout, this, &MainWindow::checkLowStock);
-    stockCheckTimer->start(60000); // every 60 seconds
+    stockCheckTimer->start(60000); // every 60 seconds  */
 
     // Do an initial check for low stock items
     checkLowStock();
